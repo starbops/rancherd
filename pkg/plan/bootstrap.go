@@ -130,8 +130,10 @@ func (p *plan) addFiles(cfg *config.Config, dataDir string) error {
 	}
 
 	// bootstrap config.yaml
-	if err := p.addFile(runtime.ToBootstrapFile(runtimeName)); err != nil {
-		return err
+	if runtimeName == config.RuntimeK3S {
+		if err := p.addFile(runtime.ToBootstrapFile(runtimeName)); err != nil {
+			return err
+		}
 	}
 
 	// registries.yaml
