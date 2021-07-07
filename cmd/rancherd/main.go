@@ -7,6 +7,7 @@ import (
 	"github.com/rancher/rancherd/cmd/rancherd/resetadmin"
 	"github.com/rancher/rancherd/cmd/rancherd/retry"
 	cli "github.com/rancher/wrangler-cli"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -18,6 +19,7 @@ func (a *Rancherd) Run(cmd *cobra.Command, args []string) error {
 }
 
 func main() {
+	logrus.SetLevel(logrus.TraceLevel)
 	root := cli.Command(&Rancherd{}, cobra.Command{
 		Long: "Bootstrap Rancher and k3s/rke2 on a node",
 	})
