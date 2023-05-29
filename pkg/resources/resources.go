@@ -8,16 +8,17 @@ import (
 	"strings"
 
 	v1 "github.com/rancher/rancher/pkg/apis/rke.cattle.io/v1"
-	"github.com/rancher/rancherd/pkg/config"
-	"github.com/rancher/rancherd/pkg/images"
-	"github.com/rancher/rancherd/pkg/kubectl"
-	"github.com/rancher/rancherd/pkg/self"
-	"github.com/rancher/rancherd/pkg/versions"
 	"github.com/rancher/system-agent/pkg/applyinator"
 	"github.com/rancher/wrangler/pkg/randomtoken"
 	"github.com/rancher/wrangler/pkg/yaml"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
+
+	"github.com/rancher/rancherd/pkg/config"
+	"github.com/rancher/rancherd/pkg/images"
+	"github.com/rancher/rancherd/pkg/kubectl"
+	"github.com/rancher/rancherd/pkg/self"
+	"github.com/rancher/rancherd/pkg/versions"
 )
 
 func writeCattleID(id string) error {
@@ -113,6 +114,7 @@ func ToBootstrapFile(config *config.Config, path string) (*applyinator.File, err
 				"name":      "local-rke-state",
 				"namespace": "fleet-local",
 			},
+			"type": "rke.cattle.io/cluster-state",
 			"data": map[string]interface{}{
 				"serverToken": []byte(token),
 				"agentToken":  []byte(token),
