@@ -179,7 +179,7 @@ func ToFile(server, token string) (*applyinator.File, error) {
 	}
 
 	return &applyinator.File{
-		Content:     string(cacert),
+		Content:     base64.StdEncoding.EncodeToString(cacert),
 		Path:        "/etc/pki/trust/anchors",
 		Permissions: "0644",
 	}, nil
