@@ -1,0 +1,15 @@
+name: ci
+on:
+  pull_request:
+  push:
+    branches:
+    - feat-*
+    - fix-*
+    - enh-*
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: action/checkout@v2
+    - name: build
+      run: make ci
