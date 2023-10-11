@@ -3,9 +3,7 @@ on:
   pull_request:
   push:
     branches:
-    - feat-*
-    - fix-*
-    - enh-*
+    - dev-*
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
