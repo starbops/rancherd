@@ -51,7 +51,13 @@ func toJoinPlan(cfg *config.Config, dataDir string) (*applyinator.Plan, error) {
 	}
 
 	plan := plan{}
+	if err := plan.addFile(cacerts.ToFile(cfg.Server, cfg.Token)); err != nil {
+		return nil, err
+	}
 	if err := plan.addFile(join.ToScriptFile(cfg, dataDir)); err != nil {
+		return nil, err
+	}
+	if err := plan.addInstruction(cacerts.ToUpdateCACertificatesInstruction()); err != nil {
 		return nil, err
 	}
 	if err := plan.addInstruction(join.ToInstruction(cfg, dataDir)); err != nil {
@@ -140,10 +146,6 @@ func (p *plan) addInstructions(cfg *config.Config, dataDir string) error {
 		return err
 	}
 
-	if err := p.addInstruction(cacerts.ToUpdateCACertificatesInstruction()); err != nil {
-		return err
-	}
-
 	p.addPrePostInstructions(cfg, k8sVersion)
 	return nil
 }
@@ -206,12 +208,8 @@ func (p *plan) addFiles(cfg *config.Config, dataDir string) error {
 	}
 
 	// rancher values.yaml
-	if err := p.addFile(rancher.ToFile(cfg, dataDir)); err != nil {
-		return err
-	}
+	return p.addFile(rancher.ToFile(cfg, dataDir))
 
-	// ca file
-	return p.addFile(cacerts.ToFile(cfg.Server, cfg.Token))
 }
 
 func (p *plan) addFile(file *applyinator.File, err error) error {
