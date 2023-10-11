@@ -6,6 +6,7 @@ import (
 
 	"github.com/rancher/system-agent/pkg/applyinator"
 
+	"github.com/rancher/rancherd/pkg/cacerts"
 	"github.com/rancher/rancherd/pkg/config"
 	"github.com/rancher/rancherd/pkg/discovery"
 	"github.com/rancher/rancherd/pkg/join"
@@ -139,6 +140,10 @@ func (p *plan) addInstructions(cfg *config.Config, dataDir string) error {
 		return err
 	}
 
+	if err := p.addInstruction(cacerts.ToUpdateCACertificatesInstruction()); err != nil {
+		return err
+	}
+
 	p.addPrePostInstructions(cfg, k8sVersion)
 	return nil
 }
@@ -201,7 +206,12 @@ func (p *plan) addFiles(cfg *config.Config, dataDir string) error {
 	}
 
 	// rancher values.yaml
-	return p.addFile(rancher.ToFile(cfg, dataDir))
+	if err := p.addFile(rancher.ToFile(cfg, dataDir)); err != nil {
+		return err
+	}
+
+	// ca file
+	return p.addFile(cacerts.ToFile(cfg.Server, cfg.Token))
 }
 
 func (p *plan) addFile(file *applyinator.File, err error) error {
